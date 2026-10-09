@@ -1,8 +1,6 @@
 ---
-title: "Modelo Projeto - Quarto"
-
-# Nome do documento PDF gerado
-output-file: titulo do projeto
+title: "Projeto Fantasma — Análise de vendas Hermes"
+output-file: "Analise-de-vendas-Hermes.pdf"
 ---
 
 ```{r}
@@ -12,8 +10,109 @@ source("rdocs/source/packages.R")
 
 # Introdução
 
-# Referencial Teórico
+Este relatório tem como objetivo analisar a evolução da receita total média das lojas das cidades-estado contempladas no projeto Hermes, entre os anos 1180 e 1189 da Era Heroica. Os valores serão apresentados em reais, considerando a cotação de 4,75 reais por dracma.
+
+<!-- Completar a contextualização com o enunciado: quem é o cliente,
+quais cidades-estado participam e quais são os demais objetivos solicitados. -->
+
+## Objetivo
+
+Descrever, ano a ano, a receita total média das lojas e identificar os aumentos e as diminuições observados ao longo do período analisado.
+
+# Dados e procedimentos
+
+## Descrição das bases
+
+<!-- Descrever as bases vendas, lojas, infos_vendas e produtos após conferir
+seus conteúdos. Informar a fonte, a unidade de cada linha e as variáveis utilizadas. -->
+
+## Preparação dos dados
+
+<!-- Documentar apenas os procedimentos efetivamente executados:
+importação, junções pelas chaves, extração do ano, seleção de 1180 a 1189,
+checagem de duplicidades e tratamento de valores ausentes.
+Verificar se as junções multiplicam linhas de vendas antes de somar receitas. -->
+
+## Critérios de cálculo
+
+A análise deve distinguir a receita de uma venda da receita total de uma loja. Para cada ano, será calculada primeiro a receita total de cada loja; em seguida, será obtida a média desses totais entre as lojas consideradas.
+
+<!-- Confirmar quais lojas compõem o denominador em cada ano.
+Uma loja sem vendas só deve receber receita zero quando a ausência de vendas
+for confirmada; um registro ausente não comprova receita nula.
+Confirmar também se o valor da venda já é total ou se deve ser calculado
+a partir de preço unitário e quantidade. -->
+
+# Referencial teórico
+
+## Receita total anual por loja
+
+Seja $R_{i,t}$ a receita total, em dracmas, da loja $i$ no ano $t$. Esse valor corresponde à soma das receitas das vendas daquela loja naquele ano.
+
+A conversão para reais é dada por:
+
+$$
+R_{i,t}^{(\mathrm{R\$})} = 4{,}75 \times R_{i,t}.
+$$
+
+## Receita total média das lojas
+
+Seja $n_t$ o número de lojas consideradas no ano $t$. A receita total média, em reais, é dada por:
+
+$$
+\overline{R}_t = \frac{1}{n_t}\sum_{i=1}^{n_t} R_{i,t}^{(\mathrm{R\$})},
+\qquad t \in \{1180,\ldots,1189\}.
+$$
+
+Essa medida representa a receita anual média por loja.
+
+## Variação entre anos consecutivos
+
+Para comparar dois anos consecutivos, a variação percentual é calculada por:
+
+$$
+V_t = \left(\frac{\overline{R}_t}{\overline{R}_{t-1}}-1\right)\times 100,
+\qquad t \in \{1181,\ldots,1189\}.
+$$
+
+Valores positivos indicam aumento; valores negativos indicam diminuição. Quando a receita média do ano anterior for zero, essa variação percentual não estará definida.
+
+<!-- Acrescentar referências bibliográficas verificadas para os conceitos utilizados.
+O arquivo Referencial Teórico.qmd serve como material de consulta; selecionar
+somente os métodos que forem utilizados neste relatório. -->
 
 # Análises
 
+## Evolução da receita total média das lojas entre 1180 e 1189
+
+### Receita média por ano
+
+<!-- Inserir uma tabela simples com duas colunas:
+Ano | Receita total média por loja (R$).
+Apresentar os dez anos em ordem crescente, com valores monetários
+formatados com duas casas decimais. Não preencher lacunas com zeros sem checagem. -->
+
+### Evolução ao longo do tempo
+
+<!-- Inserir o gráfico de linhas: ano no eixo horizontal e receita total média
+por loja (R$) no eixo vertical. Usar a mesma tabela como fonte do gráfico. -->
+
+### Interpretação dos resultados
+
+<!-- Após calcular os resultados, escrever:
+1. O valor inicial (1180) e o final (1189).
+2. Quais anos tiveram maior e menor receita média.
+3. Os principais aumentos e diminuições, indicando os valores comparados.
+4. Se o número de lojas variou e como isso afeta a comparação.
+Não atribuir causas às mudanças sem evidências nos dados. -->
+
 # Conclusões
+
+<!-- Responder diretamente ao objetivo com os resultados calculados.
+Resumir a evolução da receita média, destacar as principais mudanças
+e registrar limitações que afetem a interpretação.
+Não apresentar novas análises nesta seção. -->
+
+# Referências
+
+<!-- Inserir somente fontes efetivamente consultadas e citadas no texto. -->
