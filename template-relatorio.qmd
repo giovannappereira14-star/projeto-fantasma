@@ -1,13 +1,18 @@
 ---
-title: "Modelo Projeto - Quarto"
+title: "Projeto Fantasma - Giovanna Pires"
 
 # Nome do documento PDF gerado
-output-file: titulo do projeto
+output-file: "Analise_de_vendas_Hermes.pdf"
 ---
 
 ```{r}
 #| include: false
 source("rdocs/source/packages.R")
+arquivo <- "C:/Users/giovanna.pires/Downloads/hermes_emporio.xlsx"
+lojas <- readxl::read_excel(arquivo, sheet = "infos_lojas")
+vendas <- readxl::read_excel(arquivo, sheet = "relatorio_vendas")
+infos_vendas <- readxl::read_excel(arquivo, sheet = "infos_vendas")
+produtos <- readxl::read_excel(arquivo, sheet = "infos_produtos")
 ```
 
 # Introdução
@@ -16,4 +21,71 @@ source("rdocs/source/packages.R")
 
 # Análises
 
+## A receita média das lojas registrada entre os anos 1180 e 1189 da Era Heroica
+Esta análise tem como objetivo avaliar a evolução da receita total média anual das lojas da Hermes Empório Ltda. entre os anos 1180 e 1189 da Era Heroica. Foram utilizadas as variáveis ano, classificada como quantitativa discreta, e receita em reais, tratada como quantitativa contínua. Inicialmente, calculou-se a receita total de cada loja em cada ano, somando os valores das vendas em dracmas, obtidos pela multiplicação da quantidade vendida pelo preço unitário dos produtos.
+
+Esses totais foram convertidos para reais pela cotação de R$ 4,75 por dracma e, em seguida, foi calculada a média entre as lojas para cada ano.Para representar a evolução da receita média anual, utilizou-se um gráfico de linhas, que conecta os valores de anos e facilita a identificação de aumentos, diminuições e oscilações ao longo do tempo.Além disso foi adicionada uma tabelas com os valores de cada ano.
+
+```{r}
+#| include: false
+dados_principais <- merge(vendas,lojas, by.x = "L0jaID", by.y = "L0jaID", all.x = TRUE)
+dados_principais <- merge(dados_principais, infos_vendas, by.x = "VendaID", by.y = "V3ndaID", all.x = TRUE)
+dados_principais <- merge(dados_principais, produtos, by.x = "Pr0dutoID", by.y = "Pr0dutoID", all.x = TRUE)
+```
+
+```{r}
+#| include: false
+dados_principais$Ano <- as.integer(substr(dados_principais$Data, 1,4))
+dados_principais$Receita <- dados_principais$Quantidade * dados_principais$PrecoUnitario_drac * 4.75
+periodo <- subset(dados_principais, Ano >= 1180 & Ano <= 1189)
+receita_lojas <- aggregate(Receita ~ Ano + NomeLoja, data = periodo, FUN = sum)
+receita_media <- aggregate(Receita ~ Ano, data = receita_lojas, FUN = mean)
+receita_media
+
+```
+
+```{r}
+#| echo: false
+#| label: fig-receita-media
+#| fig-cap: "Evolução da receita média anual das lojas entre 1180 e 1189 da Era Heroica"
+ggplot(receita_media) +
+  aes(x = Ano, y = Receita, group = 1) +
+  geom_line(size = 1, colour = "#A11D21") +
+  geom_point(colour = "#A11D21", size = 2) +
+  labs(
+    x = "Ano",
+    y = "Receita média das lojas (R$)"
+  ) +
+  theme_estat() +
+  scale_x_continuous(breaks = 1180:1189)
+
+```
+
+::: {#tbl-receita-media layout-align="center" tbl-pos="H"}
+```{=latex}
+\begin{tabular}{r|r}
+\toprule
+\textbf{Ano} & \textbf{Receita média (R\$)} \\
+\midrule
+1180 & \num{222808.58} \\
+1181 & \num{209802.85} \\
+1182 & \num{214354.44} \\
+1183 & \num{211163.47} \\
+1184 & \num{218566.42} \\
+1185 & \num{207098.32} \\
+1186 & \num{236106.42} \\
+1187 & \num{227256.20} \\
+1188 & \num{207195.66} \\
+1189 & \num{238173.05} \\
+\bottomrule
+\end{tabular}
+```
+Receita média anual das lojas entre 1180 e 1189 da Era Heroica
+:::
+
+Ao analisar o gráfico, nota-se que os valores médios apresentam alta variabilidade. Apresentam múltiplos picos de alta e baixa ,ou seja, não existe uma linearidade no crescimento ou decrescimento dos valores ao longo da década. Destacam-se os anos de 1185 e 1188 que representam os pontos mínimos da série, situando-se abaixo de R$ 210.000,00. Em contrapartida, destaca-se o comportamento a partir de 1186, período em que a receita superou os R$ 225.000,00, algo que não havia sido alcançado até então na primeira metade da década.
+
+Como conclusão embora não tenha apresentado um aumento linear e constante ano a ano, a quantidade de receita produzida média encerra a década em alta, superando com folga os patamares iniciais de 1180 e demonstrando forte recuperação no final do período. Porém, mesmo terminando com um valor alto em 1189, essas mudanças indicam que seria interessante investigar o que aconteceu em 1185 e 1188 para evitar novas quedas bruscas no futuro.
+
 # Conclusões
+
