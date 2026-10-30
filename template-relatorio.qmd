@@ -8,11 +8,16 @@ output-file: "Analise_de_vendas_Hermes.pdf"
 ```{r}
 #| include: false
 source("rdocs/source/packages.R")
-arquivo <- "C:/Users/giovanna.pires/Downloads/hermes_emporio.xlsx"
+library(ggplot2)
+
+arquivo <- "C:/Users/giovanna.pires/Downloads/hermes_emporio_ajustada.xlsx"
+
 lojas <- readxl::read_excel(arquivo, sheet = "infos_lojas")
 vendas <- readxl::read_excel(arquivo, sheet = "relatorio_vendas")
 infos_vendas <- readxl::read_excel(arquivo, sheet = "infos_vendas")
 produtos <- readxl::read_excel(arquivo, sheet = "infos_produtos")
+clientes <- readxl::read_excel(arquivo, sheet = "infos_clientes")
+cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
 ```
 
 # Introdução
@@ -22,15 +27,34 @@ produtos <- readxl::read_excel(arquivo, sheet = "infos_produtos")
 # Análises
 
 ## A receita média das lojas registrada entre os anos 1180 e 1189 da Era Heroica
-Esta análise tem como objetivo avaliar a evolução da receita total média anual das lojas da Hermes Empório Ltda. entre os anos 1180 e 1189 da Era Heroica. Foram utilizadas as variáveis ano, classificada como quantitativa discreta, e receita em reais, tratada como quantitativa contínua. Inicialmente, calculou-se a receita total de cada loja em cada ano, somando os valores das vendas em dracmas, obtidos pela multiplicação da quantidade vendida pelo preço unitário dos produtos.
 
-Esses totais foram convertidos para reais pela cotação de R$ 4,75 por dracma e, em seguida, foi calculada a média entre as lojas para cada ano.Para representar a evolução da receita média anual, utilizou-se um gráfico de linhas, que conecta os valores de anos e facilita a identificação de aumentos, diminuições e oscilações ao longo do tempo.Além disso foi adicionada uma tabelas com os valores de cada ano.
+Esta análise tem como objetivo avaliar a evolução da receita total média anual das 18 lojas da Hermes Empório Ltda. entre os anos 1180 e 1189 da Era Heroica. Foram utilizadas as variáveis ano, classificada como quantitativa discreta, e receita em reais, classificada como quantitativa contínua. Inicialmente, calculou-se a receita total de cada loja em cada ano, somando os valores das vendas em dracmas, obtidos pela multiplicação da quantidade vendida pelo preço unitário dos produtos. Esses totais foram convertidos para reais à cotação de R\$ 4,75 por dracma e, em seguida, calculou-se a média das receitas totais entre as lojas para cada ano. Os resultados foram apresentados em um gráfico de linhas, para facilitar a identificação de aumentos, diminuições e oscilações ao longo do tempo, e em uma tabela com os valores de cada ano.
 
 ```{r}
 #| include: false
-dados_principais <- merge(vendas,lojas, by.x = "L0jaID", by.y = "L0jaID", all.x = TRUE)
-dados_principais <- merge(dados_principais, infos_vendas, by.x = "VendaID", by.y = "V3ndaID", all.x = TRUE)
-dados_principais <- merge(dados_principais, produtos, by.x = "Pr0dutoID", by.y = "Pr0dutoID", all.x = TRUE)
+library(ggplot2)
+```
+
+```{r}
+#| include: false
+
+dados_principais <- merge(
+  vendas, lojas,
+  by.x = "LojaID", by.y = "L0jaID",
+  all.x = TRUE
+)
+
+dados_principais <- merge(
+  dados_principais, infos_vendas,
+  by.x = "VendaID", by.y = "V3ndaID",
+  all.x = TRUE
+)
+
+dados_principais <- merge(
+  dados_principais, produtos,
+  by.x = "ProdutoID", by.y = "Pr0dutoID",
+  all.x = TRUE
+)
 ```
 
 ```{r}
@@ -41,18 +65,18 @@ periodo <- subset(dados_principais, Ano >= 1180 & Ano <= 1189)
 receita_lojas <- aggregate(Receita ~ Ano + NomeLoja, data = periodo, FUN = sum)
 receita_media <- aggregate(Receita ~ Ano, data = receita_lojas, FUN = mean)
 receita_media
-
 ```
 
 ```{r}
 #| echo: false
 #| label: fig-receita-media
-#| fig-cap: "Evolução da receita média anual das lojas entre 1180 e 1189 da Era Heroica"
+#| fig-cap: "Receita média anual das lojas"
 ggplot(receita_media) +
   aes(x = Ano, y = Receita, group = 1) +
   geom_line(size = 1, colour = "#A11D21") +
   geom_point(colour = "#A11D21", size = 2) +
   labs(
+    title = "Gráfico de linhas da receita média anual das lojas",
     x = "Ano",
     y = "Receita média das lojas (R$)"
   ) +
@@ -67,25 +91,195 @@ ggplot(receita_media) +
 \toprule
 \textbf{Ano} & \textbf{Receita média (R\$)} \\
 \midrule
-1180 & \num{222808.58} \\
-1181 & \num{209802.85} \\
-1182 & \num{214354.44} \\
-1183 & \num{211163.47} \\
-1184 & \num{218566.42} \\
-1185 & \num{207098.32} \\
-1186 & \num{236106.42} \\
-1187 & \num{227256.20} \\
-1188 & \num{207195.66} \\
-1189 & \num{238173.05} \\
+1180 & \num{203974.5} \\
+1181 & \num{209135.2} \\
+1182 & \num{213112.3} \\
+1183 & \num{216001.8} \\
+1184 & \num{210591.6} \\
+1185 & \num{207109.6} \\
+1186 & \num{212050.2} \\
+1187 & \num{218029.7} \\
+1188 & \num{225127.8} \\
+1189 & \num{231986.5} \\
 \bottomrule
 \end{tabular}
 ```
+
 Receita média anual das lojas entre 1180 e 1189 da Era Heroica
 :::
 
-Ao analisar o gráfico, nota-se que os valores médios apresentam alta variabilidade. Apresentam múltiplos picos de alta e baixa ,ou seja, não existe uma linearidade no crescimento ou decrescimento dos valores ao longo da década. Destacam-se os anos de 1185 e 1188 que representam os pontos mínimos da série, situando-se abaixo de R$ 210.000,00. Em contrapartida, destaca-se o comportamento a partir de 1186, período em que a receita superou os R$ 225.000,00, algo que não havia sido alcançado até então na primeira metade da década.
+Ao analisar o gráfico \(\ref{fig-receita-media}\), observa-se que a receita média anual das lojas cresceu entre 1180 e 1183, seguida de quedas em 1184 e 1185. A partir de 1186, houve recuperação, e, em 1187, o valor já superava o pico registrado em 1183. O crescimento continuou nos anos seguintes, atingindo o maior valor da série em 1189, com aproximadamente R$ 232 mil.Assim, apesar da queda intermediária, a receita média encerrou a década cerca de 14% acima do valor inicial. Os aumentos mais expressivos nos últimos anos mostram uma recuperação que se manteve até o fim do período.
 
-Como conclusão embora não tenha apresentado um aumento linear e constante ano a ano, a quantidade de receita produzida média encerra a década em alta, superando com folga os patamares iniciais de 1180 e demonstrando forte recuperação no final do período. Porém, mesmo terminando com um valor alto em 1189, essas mudanças indicam que seria interessante investigar o que aconteceu em 1185 e 1188 para evitar novas quedas bruscas no futuro.
+## Renda Anual x Ticket Médio
+
+Esta análise tem como objetivo entender a relação entre a renda anual dos clientes e o ticket médio, que corresponde ao valor médio gasto por compra nas lojas. Para isso, calculamos o ticket médio de cada cliente e utilizamos um gráfico de dispersão para observar se clientes com maior renda costumam gastar mais por compra, menos ou se não há uma relação clara entre essas variáveis.
+```{r}
+dados_principais$Receita <- with(
+  dados_principais,
+  Quantidade * PrecoUnitario_drac * 4.75
+)
+
+valor_compras <- aggregate(
+  Receita ~ ClienteID + VendaID,
+  data = dados_principais,
+  FUN = sum
+)
+
+ticket_clientes <- aggregate(
+  Receita ~ ClienteID,
+  data = valor_compras,
+  FUN = mean
+)
+
+names(ticket_clientes)[2] <- "Ticket_medio"
+
+```
+
+```{r}
+clientes$Renda_anual <- clientes$Renda_Anual_dracmas * 4.75
+renda_ticket <- merge(
+  ticket_clientes,
+  clientes[, c("Cl13nteID", "Renda_anual")],
+  by.x = "ClienteID",
+  by.y = "Cl13nteID",
+  all.x = TRUE
+)
+```
+```{r}
+#| echo: false
+#| label: fig-renda-ticket
+#| fig-cap: "Relação entre a renda anual e o ticket médio dos clientes"
+
+ggplot(renda_ticket, aes(x = Renda_anual, y = Ticket_medio)) +
+  geom_point(colour = "#A11D21", alpha = 0.5) +
+  labs( title = "Gráfico de Dispersão - Renda Anual x Ticket Médio",
+    x = "Renda anual (R$)",
+    y = "Ticket médio (R$)"
+  ) +
+  theme_estat()
+```
+Ao analisar o gráfico \(\ref{fig-renda-ticket}\), observa-se uma associação positiva entre a renda anual e o ticket médio: em geral, clientes com maior renda gastam mais por compra. A maior concentração de pontos está entre R$ 10 mil e R$ 20 mil de renda anual, com tickets médios entre R$ 1 mil e R$ 3 mil. Há, porém, uma dispersão considerável dos valores, pois clientes com rendas próximas apresentam gastos diferentes. Também aparecem casos mais afastados da concentração principal, como um cliente com renda próxima de R$ 34 mil e ticket médio de aproximadamente R$ 6 mil. Assim, a tendência é de aumento do ticket médio conforme a renda cresce, sem que essa relação seja uniforme entre os clientes.
+
+
+## Idade dos clientes de Atenas a depender da loja
+
+Nesta análise, buscamos conhecer o perfil de idade dos clientes de cada loja de Atenas e observar as diferenças entre elas. Para isso, utilizamos um boxplot e uma tabela com medidas descritivas, mostrando as idades mais frequentes e como elas variam em cada loja.
+
+```{r}
+cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
+
+id_atenas <- cidades$C1dadeID[
+  trimws(cidades$NomeCidade) == "Atenas"
+]
+
+```
+```{r}
+#| include: false
+id_atenas <- cidades$C1dadeID[
+  trimws(cidades$NomeCidade) == "Atenas"
+]
+clientes_atenas <- unique(
+  dados_principais[
+    dados_principais$CidadeID %in% id_atenas,
+    c("LojaID", "NomeLoja", "ClienteID")
+  ]
+)
+idades_atenas <- merge(
+  clientes_atenas,
+  clientes[, c("Cl13nteID", "Idade")],
+  by.x = "ClienteID",
+  by.y = "Cl13nteID",
+  all.x = TRUE
+)
+```
+
+```{r}
+#| echo: false
+#| label: fig-idades-atenas
+#| fig-cap: "Distribuição das idades dos clientes por loja de Atenas"
+
+ggplot(idades_atenas, aes(x = NomeLoja, y = Idade)) +
+  geom_boxplot(fill = "#A11D21", width = 0.5) +
+  stat_summary(
+    fun = "mean", geom = "point",
+    shape = 23, size = 3, fill = "white"
+  ) +
+  labs( title = "Boxplot - Idade por loja",
+    x = "Loja",
+    y = "Idade (anos)"
+  ) +
+  theme_estat() +
+  scale_x_discrete()
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+
+resumo <- idades_atenas |>
+  dplyr::group_by(NomeLoja) |>
+  dplyr::summarise(
+    Média = mean(Idade, na.rm = TRUE),
+    `Desvio Padrão` = sd(Idade, na.rm = TRUE),
+    Variância = var(Idade, na.rm = TRUE),
+    Mínimo = min(Idade, na.rm = TRUE),
+    `1º Quartil` = quantile(Idade, 0.25, na.rm = TRUE),
+    Mediana = median(Idade, na.rm = TRUE),
+    `3º Quartil` = quantile(Idade, 0.75, na.rm = TRUE),
+    Máximo = max(Idade, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+valores <- t(as.matrix(resumo[, -1]))
+
+cat(
+  "\\begin{quadro}[H]\n",
+  "\\setlength{\\tabcolsep}{9pt}\n",
+  "\\renewcommand{\\arraystretch}{1.20}\n",
+  "\\caption{Medidas resumo das idades dos clientes por loja de Atenas}\n",
+  "\\label{quad:idades_atenas}\n",
+  "\\centering\n",
+  "\\begin{adjustbox}{max width=\\textwidth}\n",
+  "\\begin{tabular}{| l |",
+  paste(rep("S[table-format=3.2]", nrow(resumo)), collapse = " "),
+  "|}\n\\hline\n",
+  sep = ""
+)
+
+cabecalho <- c(
+  "\\textbf{Estatística}",
+  paste0("{\\textbf{", resumo$NomeLoja, "}}")
+)
+
+cat(paste(cabecalho, collapse = " & "), "\\\\\n\\hline\n")
+
+for (i in seq_len(nrow(valores))) {
+  numeros <- formatC(
+    valores[i, ],
+    format = "f",
+    digits = 2,
+    decimal.mark = "."
+  )
+
+  cat(
+    paste(c(rownames(valores)[i], numeros), collapse = " & "),
+    "\\\\\n"
+  )
+}
+
+cat(
+  "\\hline\n",
+  "\\end{tabular}\n",
+  "\\end{adjustbox}\n",
+  "\\end{quadro}\n",
+  sep = ""
+)
+```
+Ao analisar o gráfico \(\ref{fig-idades-atenas}\) e o quadro \ref{quad:idades_atenas}, percebe-se que as idades dos clientes são bastante parecidas. A Correio de Hermes e a Guia dos Viajantes apresentam mediana de 45 anos, com metade dos clientes entre 40 e 49 anos. Na Sandálias Aladas, a mediana também é de 45 anos, mas os 50% centrais estão entre 41 e 50 anos. Já a Rota Olímpica tem um público ligeiramente mais velho, com média de 46,12 anos e mediana de 46 anos.
+
+A variação das idades também é próxima nas quatro lojas, com desvios-padrão entre 6,81 e 6,91 anos. No boxplot, aparecem algumas idades mais afastadas das demais, principalmente entre os clientes mais velhos. A Sandálias Aladas se destaca pela menor idade registrada, de 22 anos. A maior idade é de 73 anos na Correio de Hermes, na Rota Olímpica e na Sandálias Aladas; na Guia dos Viajantes, é de 70 anos.
+
+Assim, as lojas apresentam um perfil de idade semelhante, com as idades concentradas em torno dos 45 anos. A Rota Olímpica tem valores um pouco maiores, mas essa diferença é pequena quando comparada à variação das idades dentro de cada loja.
 
 # Conclusões
-
