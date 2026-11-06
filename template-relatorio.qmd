@@ -21,8 +21,12 @@ cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
 ```
 
 # Introdução
+A Hermes Empório Ltda. atua em seis cidades-estado da Grécia Antiga: Atenas, Esparta, Corinto, Tebas, Delfos e Micenas. Este relatório apresenta uma análise estatística dos dados de 18 lojas da empresa durante a Era Heroica. O objetivo é descrever a evolução da receita, caracterizar o perfil dos clientes e seus hábitos de compra e identificar as lojas e os produtos que se destacaram nas vendas.
+
+Os registros de vendas foram cruzados com os cadastros de clientes, lojas e produtos. A análise descritiva utilizou medidas de tendência central e de dispersão, como média, mediana e desvio-padrão. Gráficos e tabelas foram usados para mostrar a distribuição dos dados e facilitar as comparações. Também foi examinada a associação entre renda anual e valor médio gasto por compra. Nos cálculos de receita, os valores foram convertidos para reais à cotação de R$ 4,75 por dracma.
 
 # Referencial Teórico
+Este relatório é composto por técnicas estatísticas que serão descritas a seguir de acordo com o que foi utilizado no projeto  
 
 # Análises
 
@@ -108,11 +112,12 @@ ggplot(receita_media) +
 Receita média anual das lojas entre 1180 e 1189 da Era Heroica
 :::
 
-Ao analisar o gráfico \(\ref{fig-receita-media}\), observa-se que a receita média anual das lojas cresceu entre 1180 e 1183, seguida de quedas em 1184 e 1185. A partir de 1186, houve recuperação, e, em 1187, o valor já superava o pico registrado em 1183. O crescimento continuou nos anos seguintes, atingindo o maior valor da série em 1189, com aproximadamente R$ 232 mil.Assim, apesar da queda intermediária, a receita média encerrou a década cerca de 14% acima do valor inicial. Os aumentos mais expressivos nos últimos anos mostram uma recuperação que se manteve até o fim do período.
+Ao analisar o gráfico (\ref{fig-receita-media}), observa-se que a receita média anual das lojas cresceu entre 1180 e 1183, seguida de quedas em 1184 e 1185. A partir de 1186, houve recuperação, e, em 1187, o valor já superava o pico registrado em 1183. O crescimento continuou nos anos seguintes, atingindo o maior valor da série em 1189, com aproximadamente R\$ 232 mil.Assim, apesar da queda intermediária, a receita média encerrou a década cerca de 14% acima do valor inicial. Os aumentos mais expressivos nos últimos anos mostram uma recuperação que se manteve até o fim do período.
 
 ## Renda Anual x Ticket Médio
 
 Esta análise tem como objetivo entender a relação entre a renda anual dos clientes e o ticket médio, que corresponde ao valor médio gasto por compra nas lojas. Para isso, calculamos o ticket médio de cada cliente e utilizamos um gráfico de dispersão para observar se clientes com maior renda costumam gastar mais por compra, menos ou se não há uma relação clara entre essas variáveis.
+
 ```{r}
 dados_principais$Receita <- with(
   dados_principais,
@@ -145,6 +150,7 @@ renda_ticket <- merge(
   all.x = TRUE
 )
 ```
+
 ```{r}
 #| echo: false
 #| label: fig-renda-ticket
@@ -158,12 +164,14 @@ ggplot(renda_ticket, aes(x = Renda_anual, y = Ticket_medio)) +
   ) +
   theme_estat()
 ```
-Ao analisar o gráfico \(\ref{fig-renda-ticket}\), observa-se uma associação positiva entre a renda anual e o ticket médio: em geral, clientes com maior renda gastam mais por compra. A maior concentração de pontos está entre R$ 10 mil e R$ 20 mil de renda anual, com tickets médios entre R$ 1 mil e R$ 3 mil. Há, porém, uma dispersão considerável dos valores, pois clientes com rendas próximas apresentam gastos diferentes. Também aparecem casos mais afastados da concentração principal, como um cliente com renda próxima de R$ 34 mil e ticket médio de aproximadamente R$ 6 mil. Assim, a tendência é de aumento do ticket médio conforme a renda cresce, sem que essa relação seja uniforme entre os clientes.
 
+Ao analisar o gráfico (\ref{fig-renda-ticket}), observa-se uma associação positiva entre a renda anual e o ticket médio: em geral, clientes com maior renda gastam mais por compra. A maior concentração de pontos está entre R\$ 10 mil e R\$ 20 mil de renda anual, com tickets médios entre R\$ 1 mil e R\$ 3 mil. Há, porém, uma dispersão considerável dos valores, pois clientes com rendas próximas apresentam gastos diferentes. Também aparecem casos mais afastados da concentração principal, como um cliente com renda próxima de R\$ 34 mil e ticket médio de aproximadamente R\$ 6 mil. Assim, a tendência é de aumento do ticket médio conforme a renda cresce, sem que essa relação seja uniforme entre os clientes.
 
 ## Idade dos clientes de Atenas a depender da loja
 
-Nesta análise, buscamos conhecer o perfil de idade dos clientes de cada loja de Atenas e observar as diferenças entre elas. Para isso, utilizamos um boxplot e uma tabela com medidas descritivas, mostrando as idades mais frequentes e como elas variam em cada loja.
+Esta análise tem como objetivo descrever e comparar o perfil de idade dos clientes das lojas da Hermes Empório em Atenas. A base de dados foi filtrada pela cidade-estado de Atenas, e foram analisadas quatro lojas, Correio de Hermes, Guia dos Viajantes, Rota Olímpica e Sandálias Aladas. As variáveis estudadas foram a idade dos clientes, registrada em anos completos e classificada como quantitativa discreta, e a loja onde a compra foi feita, classificada como qualitativa nominal
+
+A amostra reuniu 1.123 clientes diferentes, onde 828 compraram em mais de uma loja. Cada cliente foi contado uma vez em cada loja onde comprou, mesmo que tenha feito várias compras na mesma loja. Com esse critério, a soma das contagens das quatro lojas foi de 2.481 registros. A distribuição das idades foi apresentada em um boxplot e resumida em um quadro de medidas descritivas.
 
 ```{r}
 cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
@@ -173,6 +181,7 @@ id_atenas <- cidades$C1dadeID[
 ]
 
 ```
+
 ```{r}
 #| include: false
 id_atenas <- cidades$C1dadeID[
@@ -198,18 +207,17 @@ idades_atenas <- merge(
 #| label: fig-idades-atenas
 #| fig-cap: "Distribuição das idades dos clientes por loja de Atenas"
 
-ggplot(idades_atenas, aes(x = NomeLoja, y = Idade)) +
+ggplot(idades_atenas) +
+  aes(
+    x = reorder(NomeLoja, Idade, FUN = median, na.rm = TRUE),
+    y = Idade
+  ) +
   geom_boxplot(fill = "#A11D21", width = 0.5) +
   stat_summary(
-    fun = "mean", geom = "point",
-    shape = 23, size = 3, fill = "white"
+    fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
   ) +
-  labs( title = "Boxplot - Idade por loja",
-    x = "Loja",
-    y = "Idade (anos)"
-  ) +
-  theme_estat() +
-  scale_x_discrete()
+  labs(x = "Loja", y = "Idade (anos)") +
+  theme_estat()
 ```
 
 ```{r}
@@ -276,10 +284,87 @@ cat(
   sep = ""
 )
 ```
-Ao analisar o gráfico \(\ref{fig-idades-atenas}\) e o quadro \ref{quad:idades_atenas}, percebe-se que as idades dos clientes são bastante parecidas. A Correio de Hermes e a Guia dos Viajantes apresentam mediana de 45 anos, com metade dos clientes entre 40 e 49 anos. Na Sandálias Aladas, a mediana também é de 45 anos, mas os 50% centrais estão entre 41 e 50 anos. Já a Rota Olímpica tem um público ligeiramente mais velho, com média de 46,12 anos e mediana de 46 anos.
+
+Ao analisar o gráfico (\ref{fig-idades-atenas}) e o quadro \ref{quad:idades_atenas}, percebe-se que as idades dos clientes são bastante parecidas. A Correio de Hermes e a Guia dos Viajantes apresentam mediana de 45 anos, com metade dos clientes entre 40 e 49 anos. Na Sandálias Aladas, a mediana também é de 45 anos, mas os 50% centrais estão entre 41 e 50 anos. Já a Rota Olímpica tem um público ligeiramente mais velho, com média de 46,12 anos e mediana de 46 anos.
 
 A variação das idades também é próxima nas quatro lojas, com desvios-padrão entre 6,81 e 6,91 anos. No boxplot, aparecem algumas idades mais afastadas das demais, principalmente entre os clientes mais velhos. A Sandálias Aladas se destaca pela menor idade registrada, de 22 anos. A maior idade é de 73 anos na Correio de Hermes, na Rota Olímpica e na Sandálias Aladas; na Guia dos Viajantes, é de 70 anos.
 
 Assim, as lojas apresentam um perfil de idade semelhante, com as idades concentradas em torno dos 45 anos. A Rota Olímpica tem valores um pouco maiores, mas essa diferença é pequena quando comparada à variação das idades dentro de cada loja.
 
+## O top 3 produtos mais vendidos nas top 3 lojas com maior receita no ano 1185 da Era Heroica
+
+Esta análise tem como objetivo identificar as três lojas da Hermes Empório com maior receita no ano 1185 da Era Heroica e verificar quais foram os três produtos mais vendidos em cada uma delas. A base de vendas foi filtrada para esse ano. Primeiro, as lojas foram ordenadas pela receita total. Em seguida, os produtos de cada uma das três lojas selecionadas foram ordenados pela quantidade de unidades vendidas.
+
+As variáveis consideradas foram a loja e o produto, ambas qualitativas nominais, a quantidade vendida, quantitativa discreta, e a receita, quantitativa contínua. Os resultados foram organizados em um quadro com a receita total de cada loja, os produtos mais vendidos e a quantidade de unidades vendidas de cada um.
+
+```{r}
+#| echo: false
+library(dplyr)
+vendas_1185 <- vendas |>
+  filter(substr(as.character(Data), 1, 4) == "1185") |>
+  left_join(infos_vendas, by = c("VendaID" = "V3ndaID")) |>
+  left_join(produtos, by = "Pr0dutoID") |>
+  left_join(lojas, by = "L0jaID") |>
+  mutate(Receita = Quantidade * PrecoUnitario_drac * 4.75)
+top_lojas <- vendas_1185 |>
+  group_by(L0jaID, NomeLoja) |>
+  summarise(Receita_total = sum(Receita), .groups = "drop") |>
+  arrange(desc(Receita_total)) |>
+  slice_head(n = 3)
+top_produtos <- vendas_1185 |>
+  filter(L0jaID %in% top_lojas$L0jaID) |>
+  group_by(L0jaID, NomeLoja, Pr0dutoID, NomeProduto) |>
+  summarise(Unidades_vendidas = sum(Quantidade), .groups = "drop") |>
+  arrange(desc(Unidades_vendidas)) |>
+  group_by(L0jaID) |>
+  slice_head(n = 3) |>
+  ungroup() |>
+  arrange(match(L0jaID, top_lojas$L0jaID), desc(Unidades_vendidas)) |>
+  select(NomeLoja, NomeProduto, Unidades_vendidas)
+```
+
+```{r}
+#| echo: false
+#| label: fig-top-produtos-1185
+#| fig-cap: "Unidades vendidas dos três produtos mais vendidos em cada uma das três lojas de maior faturamento em 1185"
+#| fig-width: 6.3
+#| fig-height: 5.9
+
+library(dplyr)
+library(ggplot2)
+
+dados_grafico <- top_produtos |>
+  mutate(Loja = factor(NomeLoja, levels = top_lojas$NomeLoja)) |>
+  arrange(Loja, desc(Unidades_vendidas)) |>
+  mutate(Barra = row_number())
+
+ggplot(dados_grafico) +
+  aes(
+    x = Unidades_vendidas,
+    y = factor(Barra, levels = rev(Barra))
+  ) +
+  geom_col(colour = "white", fill = "#A11D21", width = 0.7) +
+  geom_text(
+    aes(label = formatC(
+      Unidades_vendidas, format = "f", digits = 0, big.mark = "."
+    )),
+    hjust = -0.15,
+    size = 3
+  ) +
+  facet_wrap(~ Loja, ncol = 1, scales = "free_y") +
+  labs(x = "Unidades vendidas", y = "Produto") +
+  theme_estat(
+    strip.text = element_text(size = 12),
+    strip.background = element_rect(colour = "black", fill = "white")
+  ) +
+  scale_y_discrete(
+    labels = setNames(dados_grafico$NomeProduto, dados_grafico$Barra)
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(big.mark = ".", decimal.mark = ","),
+    expand = expansion(mult = c(0, 0.15))
+  )
+```
 # Conclusões
+:::
+::::
