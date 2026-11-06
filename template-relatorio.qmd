@@ -216,8 +216,9 @@ ggplot(idades_atenas) +
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
   ) +
-  labs(x = "Loja", y = "Idade (anos)") +
-  theme_estat()
+    labs(x = "Loja", y = "Idade (anos)") +
+  theme_estat() +
+  scale_x_discrete()
 ```
 
 ```{r}
@@ -299,27 +300,31 @@ As variáveis consideradas foram a loja e o produto, ambas qualitativas nominais
 
 ```{r}
 #| echo: false
+
 library(dplyr)
+
 vendas_1185 <- vendas |>
   filter(substr(as.character(Data), 1, 4) == "1185") |>
   left_join(infos_vendas, by = c("VendaID" = "V3ndaID")) |>
-  left_join(produtos, by = "Pr0dutoID") |>
-  left_join(lojas, by = "L0jaID") |>
+  left_join(produtos, by = c("ProdutoID" = "Pr0dutoID")) |>
+  left_join(lojas, by = c("LojaID" = "L0jaID")) |>
   mutate(Receita = Quantidade * PrecoUnitario_drac * 4.75)
+
 top_lojas <- vendas_1185 |>
-  group_by(L0jaID, NomeLoja) |>
+  group_by(LojaID, NomeLoja) |>
   summarise(Receita_total = sum(Receita), .groups = "drop") |>
   arrange(desc(Receita_total)) |>
   slice_head(n = 3)
+
 top_produtos <- vendas_1185 |>
-  filter(L0jaID %in% top_lojas$L0jaID) |>
-  group_by(L0jaID, NomeLoja, Pr0dutoID, NomeProduto) |>
+  filter(LojaID %in% top_lojas$LojaID) |>
+  group_by(LojaID, NomeLoja, ProdutoID, NomeProduto) |>
   summarise(Unidades_vendidas = sum(Quantidade), .groups = "drop") |>
   arrange(desc(Unidades_vendidas)) |>
-  group_by(L0jaID) |>
+  group_by(LojaID) |>
   slice_head(n = 3) |>
   ungroup() |>
-  arrange(match(L0jaID, top_lojas$L0jaID), desc(Unidades_vendidas)) |>
+  arrange(match(LojaID, top_lojas$LojaID), desc(Unidades_vendidas)) |>
   select(NomeLoja, NomeProduto, Unidades_vendidas)
 ```
 
