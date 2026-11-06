@@ -21,18 +21,24 @@ cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
 ```
 
 # Introdução
-A Hermes Empório Ltda. atua em seis cidades-estado da Grécia Antiga: Atenas, Esparta, Corinto, Tebas, Delfos e Micenas. Este relatório apresenta uma análise estatística dos dados de 18 lojas da empresa durante a Era Heroica. O objetivo é descrever a evolução da receita, caracterizar o perfil dos clientes e seus hábitos de compra e identificar as lojas e os produtos que se destacaram nas vendas.
 
-Os registros de vendas foram cruzados com os cadastros de clientes, lojas e produtos. A análise descritiva utilizou medidas de tendência central e de dispersão, como média, mediana e desvio-padrão. Gráficos e tabelas foram usados para mostrar a distribuição dos dados e facilitar as comparações. Também foi examinada a associação entre renda anual e valor médio gasto por compra. Nos cálculos de receita, os valores foram convertidos para reais à cotação de R$ 4,75 por dracma.
+O objetivo deste projeto é analisar as vendas e descrever o perfil dos clientes da Hermes Empório Ltda. O relatório abrange 18 lojas da empresa, distribuídas em seis cidades-estado da Grécia Antiga. Foram realizadas análises descritivas para acompanhar a receita ao longo dos anos, identificar as lojas e os produtos que se destacaram nas vendas e comparar as idades dos clientes das lojas de Atenas. Também foi examinada a relação entre a renda anual dos clientes e o valor médio gasto por compra.
+
+A base de dados reúne registros de vendas e informações dos cadastros de clientes, lojas e produtos. Os registros de vendas foram associados aos cadastros para identificar a data e a loja de cada compra, os produtos vendidos, as quantidades e os preços unitários. Do cadastro de clientes, foram utilizadas as informações de idade e renda anual.
+
+A organização dos dados, os cálculos e a elaboração dos gráficos e quadros foram realizados no R, versão 4.6.1. O relatório foi elaborado no Quarto.
 
 # Referencial Teórico
-Este relatório é composto por técnicas estatísticas que serão descritas a seguir de acordo com o que foi utilizado no projeto  
+
+Este relatório é composto por técnicas estatísticas que serão descritas a seguir de acordo com o que foi utilizado no projeto
 
 # Análises
 
 ## A receita média das lojas registrada entre os anos 1180 e 1189 da Era Heroica
 
-Esta análise tem como objetivo avaliar a evolução da receita total média anual das 18 lojas da Hermes Empório Ltda. entre os anos 1180 e 1189 da Era Heroica. Foram utilizadas as variáveis ano, classificada como quantitativa discreta, e receita em reais, classificada como quantitativa contínua. Inicialmente, calculou-se a receita total de cada loja em cada ano, somando os valores das vendas em dracmas, obtidos pela multiplicação da quantidade vendida pelo preço unitário dos produtos. Esses totais foram convertidos para reais à cotação de R\$ 4,75 por dracma e, em seguida, calculou-se a média das receitas totais entre as lojas para cada ano. Os resultados foram apresentados em um gráfico de linhas, para facilitar a identificação de aumentos, diminuições e oscilações ao longo do tempo, e em uma tabela com os valores de cada ano.
+O objetivo desta análise é descrever a evolução da receita média anual das 18 lojas da Hermes Empório Ltda. entre 1180 e 1189 da Era Heroica. A análise reúne 10 observações, uma para cada ano do período. Foram consideradas duas variáveis: o ano, classificado como quantitativo discreto, e a receita em reais, classificada como quantitativa contínua.
+
+O valor de cada venda foi calculado multiplicando a quantidade vendida pelo preço unitário do produto. Os valores foram somados por loja e por ano e convertidos para reais, com a cotação de R\$ 4,75 por dracma. Para cada ano, foi calculada a média das receitas totais das lojas. O gráfico de linhas mostra como essa média variou ao longo do período, e o quadro reúne os dez valores anuais.
 
 ```{r}
 #| include: false
@@ -74,13 +80,12 @@ receita_media
 ```{r}
 #| echo: false
 #| label: fig-receita-media
-#| fig-cap: "Receita média anual das lojas"
+#| fig-cap: "Gráfico de linhas da receita média anual das lojas de 1180 a 1189 da Era Heroica"
 ggplot(receita_media) +
   aes(x = Ano, y = Receita, group = 1) +
   geom_line(size = 1, colour = "#A11D21") +
   geom_point(colour = "#A11D21", size = 2) +
   labs(
-    title = "Gráfico de linhas da receita média anual das lojas",
     x = "Ano",
     y = "Receita média das lojas (R$)"
   ) +
@@ -95,28 +100,30 @@ ggplot(receita_media) +
 \toprule
 \textbf{Ano} & \textbf{Receita média (R\$)} \\
 \midrule
-1180 & \num{203974.5} \\
-1181 & \num{209135.2} \\
-1182 & \num{213112.3} \\
-1183 & \num{216001.8} \\
-1184 & \num{210591.6} \\
-1185 & \num{207109.6} \\
-1186 & \num{212050.2} \\
-1187 & \num{218029.7} \\
-1188 & \num{225127.8} \\
-1189 & \num{231986.5} \\
+1180 & \num[round-mode=none]{203974.5131944444} \\
+1181 & \num[round-mode=none]{209135.2166666667} \\
+1182 & \num[round-mode=none]{213112.2861111111} \\
+1183 & \num[round-mode=none]{216001.7770833333} \\
+1184 & \num[round-mode=none]{210591.5798611111} \\
+1185 & \num[round-mode=none]{207109.6319444444} \\
+1186 & \num[round-mode=none]{212050.1861111111} \\
+1187 & \num[round-mode=none]{218029.7368055556} \\
+1188 & \num[round-mode=none]{225127.8069444445} \\
+1189 & \num[round-mode=none]{231986.4902777778} \\
 \bottomrule
 \end{tabular}
 ```
 
-Receita média anual das lojas entre 1180 e 1189 da Era Heroica
+Receita média anual das lojas da Hermes Empório Ltda. de 1180 a 1189 da Era Heroica
 :::
 
-Ao analisar o gráfico (\ref{fig-receita-media}), observa-se que a receita média anual das lojas cresceu entre 1180 e 1183, seguida de quedas em 1184 e 1185. A partir de 1186, houve recuperação, e, em 1187, o valor já superava o pico registrado em 1183. O crescimento continuou nos anos seguintes, atingindo o maior valor da série em 1189, com aproximadamente R\$ 232 mil.Assim, apesar da queda intermediária, a receita média encerrou a década cerca de 14% acima do valor inicial. Os aumentos mais expressivos nos últimos anos mostram uma recuperação que se manteve até o fim do período.
+O gráfico de linhas (\ref{fig-receita-media}) mostra que a receita média anual das lojas passou de R\$ 203.974,5131944444 em 1180 para R\$ 216.001,7770833333 em 1183, um aumento de R\$ 12.027,2638888889. Depois de dois anos de queda, a média chegou a R\$ 207.109,6319444444 em 1185, pouco acima do valor registrado no início do período. A receita média voltou a subir em 1186, quando chegou a R\$ 212.050,1861111111. Em 1187, atingiu R\$ 218.029,7368055556 e superou o pico de 1183. A alta continuou até 1189, quando a média alcançou R\$ 231.986,4902777778, o maior valor do período. A diferença entre o primeiro e o último ano foi de R\$ 28.011,9770833334.
 
 ## Renda Anual x Ticket Médio
 
-Esta análise tem como objetivo entender a relação entre a renda anual dos clientes e o ticket médio, que corresponde ao valor médio gasto por compra nas lojas. Para isso, calculamos o ticket médio de cada cliente e utilizamos um gráfico de dispersão para observar se clientes com maior renda costumam gastar mais por compra, menos ou se não há uma relação clara entre essas variáveis.
+Esta análise busca entender se a renda anual dos clientes da Hermes Empório está relacionada ao valor que eles gastam, em média, por compra. Foram consideradas duas variáveis quantitativas contínuas, ambas expressas em reais: a renda anual e o ticket médio por cliente. Para cada cliente, o ticket médio foi calculado dividindo o valor total gasto pelo número de compras realizadas.
+
+A relação entre as duas variáveis foi apresentada em um gráfico de dispersão, no qual cada ponto representa um cliente. O gráfico permite observar se o gasto médio por compra tende a aumentar ou diminuir conforme a renda anual ou se os pontos ficam dispersos, sem um padrão claro.
 
 ```{r}
 dados_principais$Receita <- with(
@@ -154,24 +161,26 @@ renda_ticket <- merge(
 ```{r}
 #| echo: false
 #| label: fig-renda-ticket
-#| fig-cap: "Relação entre a renda anual e o ticket médio dos clientes"
+#| fig-cap: "Gráfico de dispersão do ticket médio em função da renda anual dos clientes da Hermes Empório"
 
 ggplot(renda_ticket, aes(x = Renda_anual, y = Ticket_medio)) +
   geom_point(colour = "#A11D21", alpha = 0.5) +
-  labs( title = "Gráfico de Dispersão - Renda Anual x Ticket Médio",
+  labs(
     x = "Renda anual (R$)",
     y = "Ticket médio (R$)"
   ) +
   theme_estat()
 ```
 
-Ao analisar o gráfico (\ref{fig-renda-ticket}), observa-se uma associação positiva entre a renda anual e o ticket médio: em geral, clientes com maior renda gastam mais por compra. A maior concentração de pontos está entre R\$ 10 mil e R\$ 20 mil de renda anual, com tickets médios entre R\$ 1 mil e R\$ 3 mil. Há, porém, uma dispersão considerável dos valores, pois clientes com rendas próximas apresentam gastos diferentes. Também aparecem casos mais afastados da concentração principal, como um cliente com renda próxima de R\$ 34 mil e ticket médio de aproximadamente R\$ 6 mil. Assim, a tendência é de aumento do ticket médio conforme a renda cresce, sem que essa relação seja uniforme entre os clientes.
+O gráfico de dispersão (\ref{fig-renda-ticket}) indica uma associação positiva entre a renda anual e o ticket médio. De modo geral, rendas mais altas estão associadas a valores médios maiores por compra. A maior concentração de pontos ocorre entre R\$ 10 mil e R\$ 20 mil de renda anual e entre R\$ 1 mil e R\$ 3 mil de ticket médio.
+
+Mesmo entre clientes com rendas semelhantes, há diferenças no valor médio gasto por compra. Também há pontos afastados da concentração principal, como o de um cliente com renda anual próxima de R\$ 34 mil e ticket médio de aproximadamente R\$ 6 mil. Assim, o gráfico sugere uma tendência de aumento do ticket médio conforme a renda cresce, com variação considerável entre clientes de renda semelhante.
 
 ## Idade dos clientes de Atenas a depender da loja
 
-Esta análise tem como objetivo descrever e comparar o perfil de idade dos clientes das lojas da Hermes Empório em Atenas. A base de dados foi filtrada pela cidade-estado de Atenas, e foram analisadas quatro lojas, Correio de Hermes, Guia dos Viajantes, Rota Olímpica e Sandálias Aladas. As variáveis estudadas foram a idade dos clientes, registrada em anos completos e classificada como quantitativa discreta, e a loja onde a compra foi feita, classificada como qualitativa nominal
+Esta análise compara o perfil de idade dos clientes das lojas da Hermes Empório em Atenas. A base foi filtrada pela cidade-estado de Atenas, e a análise inclui quatro lojas: Correio de Hermes, Guia dos Viajantes, Rota Olímpica e Sandálias Aladas. A idade dos clientes, registrada em anos completos, classificada como variável quantitativa discreta. A loja em que a compra foi realizada, classificada como variável qualitativa nominal.
 
-A amostra reuniu 1.123 clientes diferentes, onde 828 compraram em mais de uma loja. Cada cliente foi contado uma vez em cada loja onde comprou, mesmo que tenha feito várias compras na mesma loja. Com esse critério, a soma das contagens das quatro lojas foi de 2.481 registros. A distribuição das idades foi apresentada em um boxplot e resumida em um quadro de medidas descritivas.
+A amostra reuniu 1.123 clientes distintos, dos quais 828 compraram em mais de uma loja. Para a comparação, cada cliente foi contado uma vez em cada loja em que comprou, independentemente do número de compras naquele estabelecimento. A soma das contagens das quatro lojas foi de 2.481 registros. A distribuição das idades por loja foi apresentada em um boxplot e resumida em um quadro de medidas descritivas.
 
 ```{r}
 cidades <- readxl::read_excel(arquivo, sheet = "infos_cidades")
@@ -225,64 +234,17 @@ ggplot(idades_atenas) +
 #| echo: false
 #| results: asis
 
-
-resumo <- idades_atenas |>
-  dplyr::group_by(NomeLoja) |>
-  dplyr::summarise(
-    Média = mean(Idade, na.rm = TRUE),
-    `Desvio Padrão` = sd(Idade, na.rm = TRUE),
-    Variância = var(Idade, na.rm = TRUE),
-    Mínimo = min(Idade, na.rm = TRUE),
-    `1º Quartil` = quantile(Idade, 0.25, na.rm = TRUE),
-    Mediana = median(Idade, na.rm = TRUE),
-    `3º Quartil` = quantile(Idade, 0.75, na.rm = TRUE),
-    Máximo = max(Idade, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-valores <- t(as.matrix(resumo[, -1]))
-
-cat(
-  "\\begin{quadro}[H]\n",
-  "\\setlength{\\tabcolsep}{9pt}\n",
-  "\\renewcommand{\\arraystretch}{1.20}\n",
-  "\\caption{Medidas resumo das idades dos clientes por loja de Atenas}\n",
-  "\\label{quad:idades_atenas}\n",
-  "\\centering\n",
-  "\\begin{adjustbox}{max width=\\textwidth}\n",
-  "\\begin{tabular}{| l |",
-  paste(rep("S[table-format=3.2]", nrow(resumo)), collapse = " "),
-  "|}\n\\hline\n",
-  sep = ""
-)
-
-cabecalho <- c(
-  "\\textbf{Estatística}",
-  paste0("{\\textbf{", resumo$NomeLoja, "}}")
-)
-
-cat(paste(cabecalho, collapse = " & "), "\\\\\n\\hline\n")
-
-for (i in seq_len(nrow(valores))) {
-  numeros <- formatC(
-    valores[i, ],
-    format = "f",
-    digits = 2,
-    decimal.mark = "."
-  )
-
-  cat(
-    paste(c(rownames(valores)[i], numeros), collapse = " & "),
-    "\\\\\n"
-  )
-}
-
-cat(
-  "\\hline\n",
-  "\\end{tabular}\n",
-  "\\end{adjustbox}\n",
-  "\\end{quadro}\n",
-  sep = ""
+withr::with_options(
+  list(OutDec = "."),
+  idades_atenas |>
+    dplyr::filter(!is.na(Idade)) |>
+    dplyr::mutate(NomeLoja = reorder(NomeLoja, Idade, FUN = median)) |>
+    dplyr::group_by(NomeLoja) |>
+    print_quadro_resumo(
+      var_name = Idade,
+      title = "Medidas resumo das idades dos clientes (em anos) por loja de Atenas",
+      label = "quad:idades_atenas"
+    )
 )
 ```
 
@@ -294,9 +256,9 @@ Assim, as lojas apresentam um perfil de idade semelhante, com as idades concentr
 
 ## O top 3 produtos mais vendidos nas top 3 lojas com maior receita no ano 1185 da Era Heroica
 
-Esta análise tem como objetivo identificar as três lojas da Hermes Empório com maior receita no ano 1185 da Era Heroica e verificar quais foram os três produtos mais vendidos em cada uma delas. A base de vendas foi filtrada para esse ano. Primeiro, as lojas foram ordenadas pela receita total. Em seguida, os produtos de cada uma das três lojas selecionadas foram ordenados pela quantidade de unidades vendidas.
+A análise partiu das vendas registradas em 1185 da Era Heroica nas 18 lojas da Hermes Empório. O objetivo foi identificar as três lojas com maior receita no ano e, em cada uma delas, os três produtos mais vendidos. Loja e produto são variáveis qualitativas nominais. A quantidade vendida é quantitativa discreta, pois é contada em unidades, e a receita, expressa em reais, foi tratada como quantitativa contínua.
 
-As variáveis consideradas foram a loja e o produto, ambas qualitativas nominais, a quantidade vendida, quantitativa discreta, e a receita, quantitativa contínua. Os resultados foram organizados em um quadro com a receita total de cada loja, os produtos mais vendidos e a quantidade de unidades vendidas de cada um.
+Em ordem de receita, as três primeiras foram Moeda Alada, Trocas Rápidas e Sandálias Aladas. Para saber quais produtos mais venderam em cada uma, foi somado o número de unidades vendidas de cada produto. As receitas das lojas e as quantidades vendidas foram reunidas em um quadro. O gráfico de colunas agrupadas mostra como essas quantidades se comparam entre as lojas.
 
 ```{r}
 #| echo: false
@@ -331,45 +293,34 @@ top_produtos <- vendas_1185 |>
 ```{r}
 #| echo: false
 #| label: fig-top-produtos-1185
-#| fig-cap: "Unidades vendidas dos três produtos mais vendidos em cada uma das três lojas de maior faturamento em 1185"
-#| fig-width: 6.3
-#| fig-height: 5.9
+#| fig-cap: "Gráfico de colunas dos três produtos mais vendidos em cada uma das três lojas de maior faturamento em 1185"
 
-library(dplyr)
-library(ggplot2)
-
-dados_grafico <- top_produtos |>
-  mutate(Loja = factor(NomeLoja, levels = top_lojas$NomeLoja)) |>
-  arrange(Loja, desc(Unidades_vendidas)) |>
-  mutate(Barra = row_number())
-
-ggplot(dados_grafico) +
+ggplot(top_produtos) +
   aes(
-    x = Unidades_vendidas,
-    y = factor(Barra, levels = rev(Barra))
+    x = fct_reorder(NomeLoja, Unidades_vendidas, .desc = TRUE),
+    y = Unidades_vendidas,
+    fill = NomeProduto,
+    label = Unidades_vendidas
   ) +
-  geom_col(colour = "white", fill = "#A11D21", width = 0.7) +
+  geom_col(
+    position = position_dodge(width = 0.9)
+  ) +
   geom_text(
-    aes(label = formatC(
-      Unidades_vendidas, format = "f", digits = 0, big.mark = "."
-    )),
-    hjust = -0.15,
-    size = 3
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 2.7
   ) +
-  facet_wrap(~ Loja, ncol = 1, scales = "free_y") +
-  labs(x = "Unidades vendidas", y = "Produto") +
-  theme_estat(
-    strip.text = element_text(size = 12),
-    strip.background = element_rect(colour = "black", fill = "white")
+  labs(
+    x = "Loja",
+    y = "Unidades vendidas",
+    fill = "Produto"
   ) +
-  scale_y_discrete(
-    labels = setNames(dados_grafico$NomeProduto, dados_grafico$Barra)
-  ) +
-  scale_x_continuous(
-    labels = scales::label_number(big.mark = ".", decimal.mark = ","),
-    expand = expansion(mult = c(0, 0.15))
-  )
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE)) +
+  theme_estat() +
+  scale_x_discrete() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12)))
 ```
+
 # Conclusões
-:::
-::::
+
+\::: \:::::
